@@ -12,24 +12,18 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
     - name: Setup .NET 8.0
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '8.0.x'  
 
-    - name: Restore dependencies for main project
-      run: dotnet restore TO1.csproj
+    - name: Restore dependencies
+      run: dotnet restore
 
-    - name: Restore dependencies for test project
-      run: dotnet restore TO1.Tests.csproj
-
-    - name: Build main project
-      run: dotnet build TO1.csproj --no-restore --configuration Release
-
-    - name: Build test project
-      run: dotnet build TO1.Tests.csproj --no-restore --configuration Release
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
 
     - name: Run tests
-      run: dotnet test TO1.Tests.csproj --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal
