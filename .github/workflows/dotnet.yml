@@ -23,7 +23,7 @@ jobs:
       run: dotnet restore TO1.csproj
 
     - name: Restore dependencies for test project
-      run: dotnet restore TO1.Tests.csproj
+      run: dotnet restore TO1.tests.csproj
 
     - name: Build main project
       run: dotnet build TO1.csproj --no-restore --configuration Release
