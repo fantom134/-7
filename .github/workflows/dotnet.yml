@@ -1,7 +1,4 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: .NET CI/CD for TO1 Project
 
 on:
   push:
@@ -10,19 +7,29 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 8.0
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies for main project
+      run: dotnet restore TO1.csproj
+
+    - name: Restore dependencies for test project
+      run: dotnet restore TO1.Tests.csproj
+
+    - name: Build main project
+      run: dotnet build TO1.csproj --no-restore --configuration Release
+
+    - name: Build test project
+      run: dotnet build TO1.Tests.csproj --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test TO1.Tests.csproj --no-build --verbosity normal
