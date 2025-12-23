@@ -1,0 +1,42 @@
+name: .NET CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Debug - List files
+      run: |
+        echo "=== Current directory ==="
+        pwd
+        echo "=== All files ==="
+        ls -la
+        echo "=== .csproj files ==="
+        find . -name "*.csproj"
+
+    - name: Setup .NET 8.0
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: |
+        dotnet restore PO1.csproj
+        dotnet restore PO1.Tests.csproj
+
+    - name: Build
+      run: |
+        dotnet build PO1.csproj --no-restore --configuration Release
+        dotnet build PO1.Tests.csproj --no-restore --configuration Release
+
+    - name: Run tests
+      run: dotnet test PO1.Tests.csproj --no-build --verbosity normal
